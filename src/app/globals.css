@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+/* ─── Design tokens ─────────────────────────────────────────────── */
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-instrument), ui-serif, Georgia, serif;
+
+  --color-paper: hsl(38 33% 97%);
+  --color-sand: hsl(34 30% 92%);
+  --color-sand-deep: hsl(32 24% 86%);
+  --color-line: hsl(32 18% 86%);
+  --color-ink: hsl(24 14% 11%);
+  --color-ink-soft: hsl(24 8% 30%);
+  --color-muted: hsl(28 8% 46%);
+  --color-clay: hsl(16 52% 44%);
+  --color-clay-soft: hsl(18 60% 94%);
+  --color-sage: hsl(140 18% 36%);
+  --color-sage-soft: hsl(120 20% 93%);
+  --color-danger: hsl(4 62% 46%);
+  --color-danger-soft: hsl(4 80% 96%);
+
+  --shadow-soft: 0 1px 2px hsl(24 20% 20% / 0.04), 0 4px 16px -4px hsl(24 20% 20% / 0.08);
+  --shadow-lift: 0 2px 4px hsl(24 20% 20% / 0.04), 0 18px 40px -12px hsl(24 30% 20% / 0.22);
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-fade-up: fade-up 0.5s var(--ease-out-soft) both;
+  --animate-fade-in: fade-in 0.25s ease-out both;
+  --animate-pop: pop 0.35s var(--ease-out-soft) both;
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes pop {
+    from { opacity: 0; transform: translateY(16px) scale(0.98); }
+    to { opacity: 1; transform: none; }
+  }
+}
+
+/* ─── Base ──────────────────────────────────────────────────────── */
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-paper text-ink font-sans antialiased;
+    font-feature-settings: "ss01", "cv11";
+    /* Subtle paper grain for depth */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .28 0 0 0 0 .2 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  ::selection {
+    @apply bg-clay text-white;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ink;
+  }
+  dialog::backdrop {
+    background: hsl(24 20% 10% / 0.45);
+    backdrop-filter: blur(6px);
+    animation: fade-in 0.25s ease-out both;
+  }
+}
+
+/* ─── Components ────────────────────────────────────────────────── */
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 h-11 text-sm font-medium
+    transition-[background-color,color,box-shadow,transform] duration-200 ease-out
+    active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 cursor-pointer select-none;
+}
+
+@layer components {
+  .display {
+    @apply font-serif font-normal tracking-[-0.02em] leading-[0.95];
+  }
+  .eyebrow {
+    @apply text-[11px] font-medium uppercase tracking-[0.14em] text-muted;
+  }
+
+  .btn-primary {
+    @apply btn bg-ink text-paper shadow-soft hover:bg-ink-soft;
+  }
+  .btn-secondary {
+    @apply btn bg-white text-ink ring-1 ring-line shadow-soft hover:ring-sand-deep hover:bg-sand/40;
+  }
+  .btn-ghost {
+    @apply btn text-ink-soft hover:bg-sand hover:text-ink;
+  }
+  .btn-sm {
+    @apply h-9 px-4 text-[13px];
+  }
+
+  .field-label {
+    @apply mb-1.5 block text-[13px] font-medium text-ink-soft;
+  }
+  .field-hint {
+    @apply mt-1.5 text-xs text-muted;
+  }
+  .field-error {
+    @apply mt-1.5 text-xs font-medium text-danger;
+  }
+  .input {
+    @apply block w-full rounded-xl bg-white px-3.5 py-2.5 text-[15px] text-ink ring-1 ring-line
+      placeholder:text-muted/70 shadow-[inset_0_1px_2px_hsl(24_20%_20%/0.04)]
+      transition-shadow duration-150 outline-none
+      hover:ring-sand-deep focus:ring-2 focus:ring-ink/80;
+  }
+  .input[aria-invalid="true"] {
+    @apply ring-danger/60 focus:ring-danger;
+  }
+
+  .surface {
+    @apply rounded-2xl bg-white/80 ring-1 ring-line shadow-soft backdrop-blur-sm;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
